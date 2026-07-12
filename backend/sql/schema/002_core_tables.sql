@@ -64,14 +64,3 @@ CREATE TABLE fuel_logs (
     log_date DATE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
--- +goose Down
-DROP TABLE fuel_logs;
-DROP TABLE trips;
-DROP TABLE drivers;
-DROP TABLE vehicles;
-DROP TABLE users;
-DROP TYPE trip_status;
-DROP TYPE driver_status;
-DROP TYPE vehicle_status;
-DROP TYPE user_role;

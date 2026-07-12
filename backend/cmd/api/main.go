@@ -39,6 +39,7 @@ func main() {
 	v1 := chi.NewRouter()
 	v1.Get("/healthz", handlers.HandlerReadiness)
 	v1.Post("/login", apiCfg.HandleLogin)
+	v1.Post("/register", apiCfg.HandleRegister)
 
 	// --- Protected routes (auth required) ---
 	v1.Group(func(r chi.Router) {
