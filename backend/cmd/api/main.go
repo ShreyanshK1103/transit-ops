@@ -43,6 +43,9 @@ func main() {
 	v1.Group(func(r chi.Router) {
 		r.Use(middleware.RequireAuth)
 
+		// ── Dashboard ──
+		r.Get("/dashboard", apiCfg.HandleGetDashboard)
+
 		// ── Vehicle CRUD ──
 		r.Post("/vehicles", apiCfg.HandleCreateVehicle)
 		r.Get("/vehicles", apiCfg.HandleGetAllVehicles)
