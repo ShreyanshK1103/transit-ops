@@ -12,21 +12,31 @@ import {
   X,
   Radio,
   Settings,
-  AlertCircle
+  AlertCircle,
+  LogOut
 } from "lucide-react";
 import { useTransitOps, TabType } from "@/context/TransitOpsContext";
 
 export default function Sidebar() {
-  const { activeTab, setActiveTab, workOrders, drivers } = useTransitOps();
+  const { activeTab, setActiveTab, workOrders, drivers, logout, role } = useTransitOps();
   const [isOpen, setIsOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
-  const navigation = [
+  const allNav = [
     { id: "dashboard", name: "Executive Dashboard", icon: LayoutDashboard },
     { id: "registry", name: "Registry & Profiles", icon: Bus },
     { id: "dispatcher", name: "Smart Dispatcher", icon: Route },
     { id: "maintenance", name: "Maintenance & Expenses", icon: Wrench },
   ];
+
+  let navigation = allNav;
+  if (role === "driver") {
+    navigation = allNav.filter(n => n.id === "dispatcher");
+  } else if (role === "safety_officer") {
+    navigation = allNav.filter(n => n.id === "registry");
+  } else if (role === "financial_analyst") {
+    navigation = allNav.filter(n => n.id === "dashboard" || n.id === "maintenance");
+  }
 
   // Derive dynamic notifications based on state
   const pendingOrdersCount = workOrders.filter(w => w.status !== "Resolved").length;
@@ -167,12 +177,16 @@ export default function Sidebar() {
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-obsidian-900" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-slate-200">S. Sharma</span>
-              <span className="text-[11px] text-slate-400">Supervisor</span>
+              <span className="text-sm font-semibold text-slate-200">Terminal Access</span>
+              <span className="text-[11px] text-slate-400 capitalize">{role ? role.replace("_", " ") : "Supervisor"}</span>
             </div>
           </div>
-          <button className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-100">
-            <Settings className="w-4 h-4" />
+          <button 
+            onClick={() => logout()}
+            className="p-1.5 hover:bg-red-500/20 rounded-lg text-slate-400 hover:text-red-400 transition-colors"
+            title="Secure Logout"
+          >
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       </aside>

@@ -23,6 +23,4 @@ CREATE TABLE expenses (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- +goose Down
-DROP TABLE expenses;
-DROP TABLE maintenance_logs;
+

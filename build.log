@@ -1,0 +1,205 @@
+docker compose build
+time="2026-07-12T16:16:54+05:30" level=warning msg="/home/shreyansh/Desktop/Coding/Development/Project/transit-ops/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Image transit-ops-backend Building 
+ Image transit-ops-frontend Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB done
+#1 DONE 0.0s
+
+#2 [backend internal] load build definition from Dockerfile
+#2 transferring dockerfile: 443B done
+#2 DONE 0.0s
+
+#3 [frontend internal] load build definition from Dockerfile
+#3 transferring dockerfile: 280B done
+#3 DONE 0.0s
+
+#4 [frontend internal] load metadata for docker.io/library/node:20-alpine
+#4 ...
+
+#5 [backend internal] load metadata for docker.io/library/alpine:latest
+#5 DONE 0.4s
+
+#4 [frontend internal] load metadata for docker.io/library/node:20-alpine
+#4 DONE 0.4s
+
+#6 [backend internal] load metadata for docker.io/library/golang:alpine
+#6 DONE 0.4s
+
+#7 [frontend internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [backend internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.0s
+
+#9 [frontend 1/6] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#9 DONE 0.0s
+
+#10 [backend stage-1 1/3] FROM docker.io/library/alpine:latest@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+#10 DONE 0.0s
+
+#11 [backend stage-1 2/3] WORKDIR /app
+#11 CACHED
+
+#12 [backend internal] load build context
+#12 transferring context: 2.58kB done
+#12 DONE 0.0s
+
+#13 [backend builder 1/6] FROM docker.io/library/golang:alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2
+#13 resolve docker.io/library/golang:alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2 done
+#13 sha256:56bd32640bdfb6a9d786910d18868a249777b8689c6ef795f41a3c46968dd508 0B / 127B 0.2s
+#13 sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2 10.29kB / 10.29kB done
+#13 sha256:111d79159b2326f7e80c4a4706e1ba166acb0e2611df853955f3621828cd49e8 1.92kB / 1.92kB done
+#13 sha256:7849a63a4b6c8ad0698b3bfc67b07165835208d8d82ec5766dfc9be5d56ceeab 2.19kB / 2.19kB done
+#13 sha256:6563b0ba6ce9e242d9162b6aee6a1a9aa1a38b009348c1fcb7beee0b41ee523d 0B / 245.07kB 0.2s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 0B / 67.29MB 0.2s
+#13 sha256:56bd32640bdfb6a9d786910d18868a249777b8689c6ef795f41a3c46968dd508 127B / 127B 0.3s done
+#13 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0B / 32B 0.3s
+#13 ...
+
+#14 [frontend internal] load build context
+#14 transferring context: 2.50MB 0.5s done
+#14 DONE 0.5s
+
+#15 [frontend 2/6] WORKDIR /app
+#15 CACHED
+
+#16 [frontend 3/6] COPY package.json package-lock.json ./
+#16 CACHED
+
+#13 [backend builder 1/6] FROM docker.io/library/golang:alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 7.34MB / 67.29MB 0.6s
+#13 sha256:6563b0ba6ce9e242d9162b6aee6a1a9aa1a38b009348c1fcb7beee0b41ee523d 245.07kB / 245.07kB 0.7s done
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 17.83MB / 67.29MB 0.9s
+#13 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 32B / 32B 0.7s done
+#13 extracting sha256:6563b0ba6ce9e242d9162b6aee6a1a9aa1a38b009348c1fcb7beee0b41ee523d 0.0s done
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 22.02MB / 67.29MB 1.0s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 29.36MB / 67.29MB 1.2s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 33.55MB / 67.29MB 1.3s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 40.89MB / 67.29MB 1.5s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 51.38MB / 67.29MB 1.8s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 55.57MB / 67.29MB 1.9s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 61.87MB / 67.29MB 2.1s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 66.06MB / 67.29MB 2.2s
+#13 sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 67.29MB / 67.29MB 2.3s done
+#13 extracting sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 0.1s
+#13 extracting sha256:cea3d467f844b8e6fffc2d7793807a1ec9e3a0582655418c1c17013372a3a910 1.7s done
+#13 extracting sha256:56bd32640bdfb6a9d786910d18868a249777b8689c6ef795f41a3c46968dd508
+#13 extracting sha256:56bd32640bdfb6a9d786910d18868a249777b8689c6ef795f41a3c46968dd508 done
+#13 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 done
+#13 DONE 4.1s
+
+#17 [backend builder 2/6] WORKDIR /app
+#17 DONE 0.2s
+
+#18 [frontend 4/6] RUN npm install
+#18 ...
+
+#19 [backend builder 3/6] COPY go.mod go.sum ./
+#19 DONE 0.0s
+
+#20 [backend builder 4/6] RUN go mod download
+#20 DONE 2.9s
+
+#18 [frontend 4/6] RUN npm install
+#18 ...
+
+#21 [backend builder 5/6] COPY . .
+#21 DONE 0.0s
+
+#22 [backend builder 6/6] RUN go build -o main cmd/api/main.go
+#22 ...
+
+#18 [frontend 4/6] RUN npm install
+#18 7.006 
+#18 7.006 added 408 packages, and audited 409 packages in 7s
+#18 7.006 
+#18 7.006 151 packages are looking for funding
+#18 7.006   run `npm fund` for details
+#18 7.042 
+#18 7.042 2 moderate severity vulnerabilities
+#18 7.042 
+#18 7.042 To address all issues (including breaking changes), run:
+#18 7.042   npm audit fix --force
+#18 7.042 
+#18 7.042 Run `npm audit` for details.
+#18 7.043 npm notice
+#18 7.043 npm notice New major version of npm available! 10.8.2 -> 12.0.1
+#18 7.043 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.1
+#18 7.043 npm notice To update run: npm install -g npm@12.0.1
+#18 7.043 npm notice
+#18 DONE 7.1s
+
+#23 [frontend 5/6] COPY . .
+#23 DONE 4.1s
+
+#22 [backend builder 6/6] RUN go build -o main cmd/api/main.go
+#22 ...
+
+#24 [frontend 6/6] RUN npm run build
+#24 0.292 
+#24 0.292 > transitops@0.1.0 build
+#24 0.292 > next build
+#24 0.292 
+#24 0.609 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#24 ...
+
+#22 [backend builder 6/6] RUN go build -o main cmd/api/main.go
+#22 DONE 5.1s
+
+#25 [backend stage-1 3/3] COPY --from=builder /app/main .
+#25 DONE 0.0s
+
+#24 [frontend 6/6] RUN npm run build
+#24 0.610 This information is used to shape Next.js' roadmap and prioritize features.
+#24 0.610 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#24 0.610 https://nextjs.org/telemetry
+#24 0.610 
+#24 0.620 ▲ Next.js 16.2.10 (Turbopack)
+#24 0.620 
+#24 0.678   Creating an optimized production build ...
+#24 ...
+
+#26 [backend] exporting to image
+#26 exporting layers 0.0s done
+#26 writing image sha256:90d6989d99909193694e0325afd0d8af10eb2ea32a7dc5929f8dbc9fb4d442d8 done
+#26 naming to docker.io/library/transit-ops-backend done
+#26 DONE 0.0s
+
+#27 [backend] resolving provenance for metadata file
+#27 DONE 0.0s
+
+#24 [frontend 6/6] RUN npm run build
+#24 2.782 ✓ Compiled successfully in 1963ms
+#24 2.788   Running TypeScript ...
+#24 4.965   Finished TypeScript in 2.2s ...
+#24 4.968   Collecting page data using 5 workers ...
+#24 5.284   Generating static pages using 5 workers (0/4) ...
+#24 5.629   Generating static pages using 5 workers (1/4) 
+#24 5.630   Generating static pages using 5 workers (2/4) 
+#24 5.630   Generating static pages using 5 workers (3/4) 
+#24 5.631 ✓ Generating static pages using 5 workers (4/4) in 346ms
+#24 5.633   Finalizing page optimization ...
+#24 5.652 
+#24 5.653 Route (app)
+#24 5.653 ┌ ○ /
+#24 5.653 └ ○ /_not-found
+#24 5.653 
+#24 5.653 
+#24 5.653 ○  (Static)  prerendered as static content
+#24 5.653 
+#24 DONE 6.1s
+
+#28 [frontend] exporting to image
+#28 exporting layers
+#28 exporting layers 2.1s done
+#28 writing image sha256:822f8ee586b8a545d2e4588bc2e487154fd2011444e60910fd9ef0152dc2517c done
+#28 naming to docker.io/library/transit-ops-frontend done
+#28 DONE 2.1s
+
+#29 [frontend] resolving provenance for metadata file
+#29 DONE 0.0s
+ Image transit-ops-backend Built 
+ Image transit-ops-frontend Built 
