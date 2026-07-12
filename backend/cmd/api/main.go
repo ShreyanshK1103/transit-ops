@@ -58,6 +58,18 @@ func main() {
 		r.Get("/drivers/{driverID}", apiCfg.HandleGetDriverByID)
 		r.Put("/drivers/{driverID}", apiCfg.HandleUpdateDriver)
 
+		// ── Fuel Logs ──
+		r.Post("/fuel-logs", apiCfg.HandleCreateFuelLog)
+		r.Get("/fuel-logs", apiCfg.HandleGetFuelLogs)
+
+		// ── Expenses ──
+		r.Post("/expenses", apiCfg.HandleCreateExpense)
+		r.Get("/expenses", apiCfg.HandleGetExpenses)
+		r.Get("/vehicles/{vehicleID}/expenses", apiCfg.HandleGetExpensesByVehicle)
+
+		// ── Operational Cost Analytics (O(F+M+E+V) single query) ──
+		r.Get("/operational-costs", apiCfg.HandleGetOperationalCosts)
+
 		// ── Admin-only routes ──
 		r.Route("/admin", func(r chi.Router) {
 			r.Use(middleware.RequireRole("fleet_manager", "safety_officer"))
