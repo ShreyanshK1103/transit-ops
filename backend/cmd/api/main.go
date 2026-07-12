@@ -20,7 +20,8 @@ func main() {
 	db := database.New(conn)
 
 	apiCfg := handlers.Config{
-		DB: db,
+		DB:   db,
+		Conn: conn,
 	}
 
 	router := chi.NewRouter()
@@ -57,6 +58,18 @@ func main() {
 		r.Get("/drivers", apiCfg.HandleGetAllDrivers)
 		r.Get("/drivers/{driverID}", apiCfg.HandleGetDriverByID)
 		r.Put("/drivers/{driverID}", apiCfg.HandleUpdateDriver)
+
+		// ── Trips Management ──
+		r.Post("/trips", apiCfg.HandleCreateTrip)
+		r.Get("/trips", apiCfg.HandleGetAllTrips)
+		r.Put("/trips/{tripID}/dispatch", apiCfg.HandleDispatchTrip)
+		r.Put("/trips/{tripID}/complete", apiCfg.HandleCompleteTrip)
+		r.Put("/trips/{tripID}/cancel", apiCfg.HandleCancelTrip)
+
+		// ── Maintenance Workflow ──
+		r.Post("/vehicles/{vehicleID}/maintenance", apiCfg.HandleStartMaintenance)
+		r.Put("/maintenance/{logID}/close", apiCfg.HandleCloseMaintenance)
+		r.Get("/maintenance", apiCfg.HandleGetAllMaintenance)
 
 		// ── Fuel Logs ──
 		r.Post("/fuel-logs", apiCfg.HandleCreateFuelLog)

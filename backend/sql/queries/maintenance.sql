@@ -18,3 +18,7 @@ UPDATE maintenance_logs
 SET is_active = FALSE, end_date = $2
 WHERE id = $1
 RETURNING *;
+
+-- name: GetMaintenanceLogByID :one
+SELECT * FROM maintenance_logs
+WHERE id = $1;

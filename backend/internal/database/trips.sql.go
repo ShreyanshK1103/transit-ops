@@ -53,6 +53,105 @@ func (q *Queries) CreateTrip(ctx context.Context, arg CreateTripParams) (Trip, e
 	return i, err
 }
 
+const getAllTrips = `-- name: GetAllTrips :many
+SELECT id, source, destination, vehicle_id, driver_id, cargo_weight, planned_distance, status, created_at FROM trips
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetAllTrips(ctx context.Context) ([]Trip, error) {
+	rows, err := q.db.QueryContext(ctx, getAllTrips)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Trip
+	for rows.Next() {
+		var i Trip
+		if err := rows.Scan(
+			&i.ID,
+			&i.Source,
+			&i.Destination,
+			&i.VehicleID,
+			&i.DriverID,
+			&i.CargoWeight,
+			&i.PlannedDistance,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTripByID = `-- name: GetTripByID :one
+SELECT id, source, destination, vehicle_id, driver_id, cargo_weight, planned_distance, status, created_at FROM trips
+WHERE id = $1
+`
+
+func (q *Queries) GetTripByID(ctx context.Context, id uuid.UUID) (Trip, error) {
+	row := q.db.QueryRowContext(ctx, getTripByID, id)
+	var i Trip
+	err := row.Scan(
+		&i.ID,
+		&i.Source,
+		&i.Destination,
+		&i.VehicleID,
+		&i.DriverID,
+		&i.CargoWeight,
+		&i.PlannedDistance,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getTripsByStatus = `-- name: GetTripsByStatus :many
+SELECT id, source, destination, vehicle_id, driver_id, cargo_weight, planned_distance, status, created_at FROM trips
+WHERE status = $1
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetTripsByStatus(ctx context.Context, status NullTripStatus) ([]Trip, error) {
+	rows, err := q.db.QueryContext(ctx, getTripsByStatus, status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Trip
+	for rows.Next() {
+		var i Trip
+		if err := rows.Scan(
+			&i.ID,
+			&i.Source,
+			&i.Destination,
+			&i.VehicleID,
+			&i.DriverID,
+			&i.CargoWeight,
+			&i.PlannedDistance,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateTripStatus = `-- name: UpdateTripStatus :one
 UPDATE trips
 SET status = $2

@@ -113,6 +113,27 @@ func (q *Queries) GetActiveMaintenanceLogs(ctx context.Context) ([]MaintenanceLo
 	return items, nil
 }
 
+const getMaintenanceLogByID = `-- name: GetMaintenanceLogByID :one
+SELECT id, vehicle_id, description, cost, start_date, end_date, is_active, created_at FROM maintenance_logs
+WHERE id = $1
+`
+
+func (q *Queries) GetMaintenanceLogByID(ctx context.Context, id uuid.UUID) (MaintenanceLog, error) {
+	row := q.db.QueryRowContext(ctx, getMaintenanceLogByID, id)
+	var i MaintenanceLog
+	err := row.Scan(
+		&i.ID,
+		&i.VehicleID,
+		&i.Description,
+		&i.Cost,
+		&i.StartDate,
+		&i.EndDate,
+		&i.IsActive,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getMaintenanceLogsByVehicle = `-- name: GetMaintenanceLogsByVehicle :many
 SELECT id, vehicle_id, description, cost, start_date, end_date, is_active, created_at FROM maintenance_logs
 WHERE vehicle_id = $1

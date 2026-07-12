@@ -15,12 +15,12 @@ import (
 // ── JSON Request / Response types ────────────────────────────────────────────
 
 type createVehicleRequest struct {
-	RegistrationNumber string  `json:"registration_number"`
-	NameModel          string  `json:"name_model"`
-	VehicleType        string  `json:"vehicle_type"`
-	MaxLoadCapacity    string  `json:"max_load_capacity"`
-	Odometer           string  `json:"odometer"`
-	AcquisitionCost    string  `json:"acquisition_cost"`
+	RegistrationNumber string `json:"registration_number"`
+	NameModel          string `json:"name_model"`
+	VehicleType        string `json:"vehicle_type"`
+	MaxLoadCapacity    string `json:"max_load_capacity"`
+	Odometer           string `json:"odometer"`
+	AcquisitionCost    string `json:"acquisition_cost"`
 }
 
 type updateVehicleRequest struct {
