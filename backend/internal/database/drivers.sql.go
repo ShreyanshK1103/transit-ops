@@ -7,6 +7,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -55,9 +56,48 @@ func (q *Queries) CreateDriver(ctx context.Context, arg CreateDriverParams) (Dri
 	return i, err
 }
 
+const getAllDrivers = `-- name: GetAllDrivers :many
+SELECT id, user_id, name, license_number, license_category, license_expiry_date, contact_number, safety_score, status, created_at FROM drivers
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetAllDrivers(ctx context.Context) ([]Driver, error) {
+	rows, err := q.db.QueryContext(ctx, getAllDrivers)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Driver
+	for rows.Next() {
+		var i Driver
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.LicenseNumber,
+			&i.LicenseCategory,
+			&i.LicenseExpiryDate,
+			&i.ContactNumber,
+			&i.SafetyScore,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAvailableDrivers = `-- name: GetAvailableDrivers :many
-SELECT id, user_id, name, license_number, license_category, license_expiry_date, contact_number, safety_score, status, created_at FROM drivers 
-WHERE status = 'Available' 
+SELECT id, user_id, name, license_number, license_category, license_expiry_date, contact_number, safety_score, status, created_at FROM drivers
+WHERE status = 'Available'
 AND license_expiry_date > CURRENT_DATE
 `
 
@@ -95,9 +135,144 @@ func (q *Queries) GetAvailableDrivers(ctx context.Context) ([]Driver, error) {
 	return items, nil
 }
 
+const getDriverByID = `-- name: GetDriverByID :one
+SELECT id, user_id, name, license_number, license_category, license_expiry_date, contact_number, safety_score, status, created_at FROM drivers
+WHERE id = $1
+`
+
+func (q *Queries) GetDriverByID(ctx context.Context, id uuid.UUID) (Driver, error) {
+	row := q.db.QueryRowContext(ctx, getDriverByID, id)
+	var i Driver
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.LicenseNumber,
+		&i.LicenseCategory,
+		&i.LicenseExpiryDate,
+		&i.ContactNumber,
+		&i.SafetyScore,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getDriverByLicense = `-- name: GetDriverByLicense :one
+SELECT id, user_id, name, license_number, license_category, license_expiry_date, contact_number, safety_score, status, created_at FROM drivers
+WHERE license_number = $1
+`
+
+func (q *Queries) GetDriverByLicense(ctx context.Context, licenseNumber string) (Driver, error) {
+	row := q.db.QueryRowContext(ctx, getDriverByLicense, licenseNumber)
+	var i Driver
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.LicenseNumber,
+		&i.LicenseCategory,
+		&i.LicenseExpiryDate,
+		&i.ContactNumber,
+		&i.SafetyScore,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getDriversByStatus = `-- name: GetDriversByStatus :many
+SELECT id, user_id, name, license_number, license_category, license_expiry_date, contact_number, safety_score, status, created_at FROM drivers
+WHERE status = $1
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetDriversByStatus(ctx context.Context, status NullDriverStatus) ([]Driver, error) {
+	rows, err := q.db.QueryContext(ctx, getDriversByStatus, status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Driver
+	for rows.Next() {
+		var i Driver
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.LicenseNumber,
+			&i.LicenseCategory,
+			&i.LicenseExpiryDate,
+			&i.ContactNumber,
+			&i.SafetyScore,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateDriver = `-- name: UpdateDriver :one
+UPDATE drivers
+SET
+    name = $2,
+    license_number = $3,
+    license_category = $4,
+    license_expiry_date = $5,
+    contact_number = $6,
+    safety_score = $7
+WHERE id = $1
+RETURNING id, user_id, name, license_number, license_category, license_expiry_date, contact_number, safety_score, status, created_at
+`
+
+type UpdateDriverParams struct {
+	ID                uuid.UUID
+	Name              string
+	LicenseNumber     string
+	LicenseCategory   string
+	LicenseExpiryDate time.Time
+	ContactNumber     string
+	SafetyScore       sql.NullInt32
+}
+
+func (q *Queries) UpdateDriver(ctx context.Context, arg UpdateDriverParams) (Driver, error) {
+	row := q.db.QueryRowContext(ctx, updateDriver,
+		arg.ID,
+		arg.Name,
+		arg.LicenseNumber,
+		arg.LicenseCategory,
+		arg.LicenseExpiryDate,
+		arg.ContactNumber,
+		arg.SafetyScore,
+	)
+	var i Driver
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.LicenseNumber,
+		&i.LicenseCategory,
+		&i.LicenseExpiryDate,
+		&i.ContactNumber,
+		&i.SafetyScore,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const updateDriverStatus = `-- name: UpdateDriverStatus :exec
-UPDATE drivers 
-SET status = $2 
+UPDATE drivers
+SET status = $2
 WHERE id = $1
 `
 
