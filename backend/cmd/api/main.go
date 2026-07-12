@@ -43,15 +43,23 @@ func main() {
 	v1.Group(func(r chi.Router) {
 		r.Use(middleware.RequireAuth)
 
-		// Example: only fleet_manager and safety_officer can access admin routes
+		// ── Vehicle CRUD ──
+		r.Post("/vehicles", apiCfg.HandleCreateVehicle)
+		r.Get("/vehicles", apiCfg.HandleGetAllVehicles)
+		r.Get("/vehicles/{vehicleID}", apiCfg.HandleGetVehicleByID)
+		r.Put("/vehicles/{vehicleID}", apiCfg.HandleUpdateVehicle)
+
+		// ── Driver CRUD ──
+		r.Post("/drivers", apiCfg.HandleCreateDriver)
+		r.Get("/drivers", apiCfg.HandleGetAllDrivers)
+		r.Get("/drivers/{driverID}", apiCfg.HandleGetDriverByID)
+		r.Put("/drivers/{driverID}", apiCfg.HandleUpdateDriver)
+
+		// ── Admin-only routes ──
 		r.Route("/admin", func(r chi.Router) {
 			r.Use(middleware.RequireRole("fleet_manager", "safety_officer"))
 			// Add admin-only endpoints here
 		})
-
-		// Routes accessible by any authenticated user — add your CRUD handlers here
-		// r.Get("/vehicles", ...)
-		// r.Post("/vehicles", ...)
 	})
 
 	router.Mount("/api/v1", v1)

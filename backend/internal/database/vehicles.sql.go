@@ -54,8 +54,46 @@ func (q *Queries) CreateVehicle(ctx context.Context, arg CreateVehicleParams) (V
 	return i, err
 }
 
+const getAllVehicles = `-- name: GetAllVehicles :many
+SELECT id, registration_number, name_model, vehicle_type, max_load_capacity, odometer, acquisition_cost, status, created_at FROM vehicles
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetAllVehicles(ctx context.Context) ([]Vehicle, error) {
+	rows, err := q.db.QueryContext(ctx, getAllVehicles)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Vehicle
+	for rows.Next() {
+		var i Vehicle
+		if err := rows.Scan(
+			&i.ID,
+			&i.RegistrationNumber,
+			&i.NameModel,
+			&i.VehicleType,
+			&i.MaxLoadCapacity,
+			&i.Odometer,
+			&i.AcquisitionCost,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAvailableVehicles = `-- name: GetAvailableVehicles :many
-SELECT id, registration_number, name_model, vehicle_type, max_load_capacity, odometer, acquisition_cost, status, created_at FROM vehicles 
+SELECT id, registration_number, name_model, vehicle_type, max_load_capacity, odometer, acquisition_cost, status, created_at FROM vehicles
 WHERE status = 'Available' AND max_load_capacity >= $1
 `
 
@@ -92,9 +130,137 @@ func (q *Queries) GetAvailableVehicles(ctx context.Context, maxLoadCapacity stri
 	return items, nil
 }
 
+const getVehicleByID = `-- name: GetVehicleByID :one
+SELECT id, registration_number, name_model, vehicle_type, max_load_capacity, odometer, acquisition_cost, status, created_at FROM vehicles
+WHERE id = $1
+`
+
+func (q *Queries) GetVehicleByID(ctx context.Context, id uuid.UUID) (Vehicle, error) {
+	row := q.db.QueryRowContext(ctx, getVehicleByID, id)
+	var i Vehicle
+	err := row.Scan(
+		&i.ID,
+		&i.RegistrationNumber,
+		&i.NameModel,
+		&i.VehicleType,
+		&i.MaxLoadCapacity,
+		&i.Odometer,
+		&i.AcquisitionCost,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getVehicleByRegistration = `-- name: GetVehicleByRegistration :one
+SELECT id, registration_number, name_model, vehicle_type, max_load_capacity, odometer, acquisition_cost, status, created_at FROM vehicles
+WHERE registration_number = $1
+`
+
+func (q *Queries) GetVehicleByRegistration(ctx context.Context, registrationNumber string) (Vehicle, error) {
+	row := q.db.QueryRowContext(ctx, getVehicleByRegistration, registrationNumber)
+	var i Vehicle
+	err := row.Scan(
+		&i.ID,
+		&i.RegistrationNumber,
+		&i.NameModel,
+		&i.VehicleType,
+		&i.MaxLoadCapacity,
+		&i.Odometer,
+		&i.AcquisitionCost,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getVehiclesByStatus = `-- name: GetVehiclesByStatus :many
+SELECT id, registration_number, name_model, vehicle_type, max_load_capacity, odometer, acquisition_cost, status, created_at FROM vehicles
+WHERE status = $1
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetVehiclesByStatus(ctx context.Context, status NullVehicleStatus) ([]Vehicle, error) {
+	rows, err := q.db.QueryContext(ctx, getVehiclesByStatus, status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Vehicle
+	for rows.Next() {
+		var i Vehicle
+		if err := rows.Scan(
+			&i.ID,
+			&i.RegistrationNumber,
+			&i.NameModel,
+			&i.VehicleType,
+			&i.MaxLoadCapacity,
+			&i.Odometer,
+			&i.AcquisitionCost,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateVehicle = `-- name: UpdateVehicle :one
+UPDATE vehicles
+SET
+    name_model = $2,
+    vehicle_type = $3,
+    max_load_capacity = $4,
+    odometer = $5,
+    acquisition_cost = $6
+WHERE id = $1
+RETURNING id, registration_number, name_model, vehicle_type, max_load_capacity, odometer, acquisition_cost, status, created_at
+`
+
+type UpdateVehicleParams struct {
+	ID              uuid.UUID
+	NameModel       string
+	VehicleType     string
+	MaxLoadCapacity string
+	Odometer        sql.NullString
+	AcquisitionCost string
+}
+
+func (q *Queries) UpdateVehicle(ctx context.Context, arg UpdateVehicleParams) (Vehicle, error) {
+	row := q.db.QueryRowContext(ctx, updateVehicle,
+		arg.ID,
+		arg.NameModel,
+		arg.VehicleType,
+		arg.MaxLoadCapacity,
+		arg.Odometer,
+		arg.AcquisitionCost,
+	)
+	var i Vehicle
+	err := row.Scan(
+		&i.ID,
+		&i.RegistrationNumber,
+		&i.NameModel,
+		&i.VehicleType,
+		&i.MaxLoadCapacity,
+		&i.Odometer,
+		&i.AcquisitionCost,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const updateVehicleStatus = `-- name: UpdateVehicleStatus :exec
-UPDATE vehicles 
-SET status = $2 
+UPDATE vehicles
+SET status = $2
 WHERE id = $1
 `
 
