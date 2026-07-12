@@ -202,6 +202,16 @@ type Driver struct {
 	CreatedAt         sql.NullTime
 }
 
+type Expense struct {
+	ID          uuid.UUID
+	VehicleID   uuid.UUID
+	Category    string
+	Amount      string
+	ExpenseDate time.Time
+	Description sql.NullString
+	CreatedAt   sql.NullTime
+}
+
 type FuelLog struct {
 	ID        uuid.UUID
 	VehicleID uuid.NullUUID
@@ -209,6 +219,17 @@ type FuelLog struct {
 	Cost      string
 	LogDate   time.Time
 	CreatedAt sql.NullTime
+}
+
+type MaintenanceLog struct {
+	ID          uuid.UUID
+	VehicleID   uuid.UUID
+	Description string
+	Cost        string
+	StartDate   time.Time
+	EndDate     sql.NullTime
+	IsActive    sql.NullBool
+	CreatedAt   sql.NullTime
 }
 
 type Trip struct {
